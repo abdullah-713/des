@@ -1,0 +1,172 @@
+{
+  "app": {
+    "name": "صرح انضباط",
+    "name_en": "Sarh Discipline",
+    "version": "1.0.0",
+    "description": "نظام الحضور الذكي والمتطور للشركات والمؤسسات",
+    "description_en": "Smart attendance system for companies and organizations",
+    "author": "فريق صرح الإتقان التقني",
+    "author_en": "Sarh Al-Itqan Technical Team",
+    "website": "https://sarh.io",
+    "support_email": "support@sarh.io"
+  },
+  "deployment": {
+    "domain": "sarh.io",
+    "subdomain": "app",
+    "full_url": "https://sarh.io/app",
+    "ssl_enabled": true,
+    "cdn_enabled": true
+  },
+  "requirements": {
+    "php_version": "7.4+",
+    "mysql_version": "5.7+",
+    "extensions": [
+      "pdo",
+      "pdo_mysql",
+      "gd",
+      "mbstring",
+      "json"
+    ],
+    "memory_limit": "128M",
+    "max_execution_time": "300",
+    "upload_max_filesize": "10M"
+  },
+  "database": {
+    "default_name": "sarh_discipline",
+    "charset": "utf8mb4",
+    "collation": "utf8mb4_unicode_ci",
+    "tables": [
+      "branches",
+      "employees", 
+      "attendance_records",
+      "system_settings",
+      "users"
+    ]
+  },
+  "features": {
+    "multilingual": false,
+    "rtl_support": true,
+    "mobile_responsive": true,
+    "dark_mode": false,
+    "api_enabled": true,
+    "real_time_updates": true,
+    "file_uploads": true,
+    "print_reports": true,
+    "data_export": true
+  },
+  "security": {
+    "csrf_protection": true,
+    "sql_injection_protection": true,
+    "xss_protection": true,
+    "password_hashing": "bcrypt",
+    "session_security": true,
+    "file_upload_validation": true
+  },
+  "installation": {
+    "wizard_enabled": true,
+    "auto_setup": true,
+    "demo_data": true,
+    "logo_upload": true,
+    "company_customization": true
+  },
+  "files": {
+    "entry_point": "index.php",
+    "employee_interface": "employee.php",
+    "admin_interface": "admin.php",
+    "installation_wizard": "install.php",
+    "database_schema": "database.sql",
+    "configuration": "config.php",
+    "documentation": "README.md"
+  },
+  "directories": {
+    "uploads": "uploads/",
+    "assets": "assets/",
+    "logs": "logs/"
+  },
+  "default_settings": {
+    "company_name": "صرح الإتقان",
+    "work_start_time": "08:00",
+    "grace_period_minutes": 30,
+    "late_penalties": {
+      "level_1": 10,
+      "level_2": 15,
+      "level_3": 25,
+      "level_4": 45
+    },
+    "timezone": "Asia/Riyadh",
+    "language": "ar",
+    "date_format": "d/m/Y",
+    "time_format": "H:i"
+  },
+  "demo_data": {
+    "branches": 4,
+    "employees": 25,
+    "admin_username": "admin",
+    "admin_password": "admin123"
+  },
+  "performance": {
+    "caching_enabled": true,
+    "compression_enabled": true,
+    "minification": false,
+    "lazy_loading": true
+  },
+  "monitoring": {
+    "error_logging": true,
+    "access_logging": false,
+    "performance_monitoring": false,
+    "uptime_monitoring": true
+  },
+  "backup": {
+    "auto_backup": false,
+    "backup_frequency": "daily",
+    "retention_days": 30,
+    "backup_location": "backups/"
+  },
+  "integrations": {
+    "email_notifications": false,
+    "sms_notifications": false,
+    "webhook_support": false,
+    "api_integrations": true
+  },
+  "customization": {
+    "theme_customization": true,
+    "logo_upload": true,
+    "color_schemes": false,
+    "custom_css": false,
+    "white_labeling": true
+  },
+  "support": {
+    "documentation_url": "https://sarh.io/docs/discipline",
+    "video_tutorials": "https://sarh.io/tutorials/discipline",
+    "community_forum": "https://community.sarh.io",
+    "technical_support": "support@sarh.io",
+    "live_chat": false
+  },
+  "license": {
+    "type": "Proprietary",
+    "owner": "Sarh Al-Itqan",
+    "year": "2026",
+    "restrictions": [
+      "Commercial use allowed",
+      "Modification allowed",
+      "Redistribution not allowed",
+      "Attribution required"
+    ]
+  },
+  "changelog": {
+    "1.0.0": {
+      "date": "2026-02-01",
+      "changes": [
+        "إطلاق النسخة الأولى من النظام",
+        "واجهة الموظفين مع تسجيل الحضور والانصراف",
+        "لوحة الإدارة الشاملة",
+        "معالج التثبيت التفاعلي",
+        "دعم الشعارات المخصصة",
+        "نظام النقاط المتدرج",
+        "تصميم متجاوب للهواتف",
+        "إحصائيات مفصلة للفروع",
+        "أمان متقدم وحماية البيانات"
+      ]
+    }
+  }
+}

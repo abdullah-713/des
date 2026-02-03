@@ -205,9 +205,6 @@ header('Content-Type: text/html; charset=utf-8');
                 <?php if (file_exists('install.php')): ?>
                     <a href="install.php" class="btn">⚙️ معالج التثبيت الكامل</a>
                 <?php endif; ?>
-                <?php if (file_exists('update_system.php')): ?>
-                    <a href="update_system.php" class="btn">🔄 تحديث النظام</a>
-                <?php endif; ?>
             <?php else: ?>
             <a href="index.php" class="btn">🏠 الصفحة الرئيسية</a>
             <a href="employee.php" class="btn">👥 واجهة الموظفين</a>

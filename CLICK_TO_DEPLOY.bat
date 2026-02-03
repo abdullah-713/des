@@ -1,14 +1,18 @@
 @echo off
-mode con: cols=140 lines=50
+mode con: cols=100 lines=35
 color 0A
-chcp 65001 > nul
-echo ==========================================
-echo      Starting Deployment to Sarh.io
-echo ==========================================
+chcp 65001 >nul
+title نشر صرح انضباط - Sarh.io
+
 echo.
-powershell -ExecutionPolicy Bypass -File "deploy.ps1"
+echo   ==========================================
+echo        نشر صرح انضباط — رفع الملفات فقط
+echo   ==========================================
+echo   قاعدة البيانات: تستورد يدوياً من phpMyAdmin
+echo   ==========================================
 echo.
-echo ==========================================
-echo      Deployment Process Finished
-echo ==========================================
+
+powershell -ExecutionPolicy Bypass -File "%~dp0deploy.ps1"
+
+echo.
 pause

@@ -1,6 +1,14 @@
 # حماية نظام صرح انضباط
 # Sarh Discipline System Protection
 
+# إعادة التوجيه إلى HTTPS (يحتاج تفعيل SSL من لوحة الاستضافة أولاً)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
 # منع عرض محتويات المجلدات
 Options -Indexes
 

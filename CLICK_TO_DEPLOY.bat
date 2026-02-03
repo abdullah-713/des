@@ -1,14 +1,13 @@
 @echo off
 mode con: cols=100 lines=35
 color 0A
-chcp 65001 >nul
-title نشر صرح انضباط - Sarh.io
+title Deploy Sarh System
 
 echo.
 echo   ==========================================
-echo        نشر صرح انضباط — رفع الملفات فقط
+echo        SARH DEPLOYMENT - FILES ONLY
 echo   ==========================================
-echo   قاعدة البيانات: تستورد يدوياً من phpMyAdmin
+echo   Database: Import manually via phpMyAdmin
 echo   ==========================================
 echo.
 

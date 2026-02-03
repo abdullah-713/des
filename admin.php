@@ -270,33 +270,27 @@ try {
     <script src="assets/js/pwa.js" defer></script>
 </head>
 <body>
-    <div class="app-shell">
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <button class="icon-btn" id="sidebarToggle"><span class="material-icons">menu</span></button>
-                <div class="brand">
-                    <div class="brand-logo">
-                        <?php
-                        $logoPath = SystemSettings::get('company_logo', '');
-                        if ($logoPath && file_exists($logoPath)):
-                        ?>
-                        <img src="<?php echo $logoPath; ?>" alt="شعار الشركة">
-                        <?php else: ?>
-                        <span class="material-icons">corporate_fare</span>
-                        <?php endif; ?>
-                    </div>
-                    <div class="brand-title">
-                        <strong>لوحة الإدارة</strong>
-                        <span><?php echo SystemSettings::get('company_name', 'صرح الإتقان'); ?></span>
-                    </div>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <?php
+                $logoPath = SystemSettings::get('company_logo', '');
+                if ($logoPath && file_exists($logoPath)):
+                ?>
+                <img src="<?php echo $logoPath; ?>" alt="شعار الشركة" style="max-height: 50px; max-width: 80px; background: white; padding: 5px; border-radius: 8px;">
+                <?php endif; ?>
+                <div>
+                    <h1>🔧 صرح انضباط - لوحة الإدارة</h1>
+                    <small style="opacity: 0.8;"><?php echo SystemSettings::get('company_name', 'صرح الإتقان'); ?></small>
                 </div>
             </div>
-            <div class="sidebar-user">
-                <div class="avatar"><?php echo mb_substr($adminUsername, 0, 1); ?></div>
-                <div class="meta">
-                    <strong><?php echo htmlspecialchars($adminUsername); ?></strong>
-                    <span>مدير النظام</span>
-                </div>
+            <div class="header-actions">
+                <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 14px;">
+                    👤 <?php echo htmlspecialchars($adminUsername); ?>
+                </span>
+                <a href="employee.php" class="btn btn-light">👥 واجهة الموظف</a>
+                <button onclick="logout()" class="btn btn-danger" style="background: #dc2626;">🚪 تسجيل الخروج</button>
             </div>
             <nav class="sidebar-nav">
                 <button class="nav-link active" onclick="showTab('dashboard')" data-tab="dashboard">
@@ -386,7 +380,7 @@ try {
                 <div class="control-card">
                     <h4>📈 الإحصائيات السريعة</h4>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 14px;">
-                        <div>إجمالي الموظفين: <strong id="dashTotalEmployees">0</strong></div>
+                        <div>إجمالي المستخدمين: <strong id="dashTotalEmployees">0</strong></div>
                         <div>الحضور اليوم: <strong id="dashPresentCount" style="color: var(--success);">0</strong></div>
                         <div>حالات التأخير: <strong id="dashLateCount" style="color: var(--danger);">0</strong></div>
                         <div>نسبة الالتزام: <strong id="dashAttendanceRate" style="color: var(--primary);">0%</strong></div>
@@ -415,30 +409,7 @@ try {
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h3>تحليلات الأداء</h3>
-                    <span id="chartSummary"></span>
-                </div>
-                <div class="card-body">
-                    <div class="charts-grid">
-                        <div class="chart-card">
-                            <h4>نسبة الحضور اليوم</h4>
-                            <div class="donut-chart" id="attendanceDonut">
-                                <div class="center">
-                                    <div id="attendanceDonutValue">0%</div>
-                                    <small>الالتزام</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chart-card">
-                            <h4>أداء الفروع</h4>
-                            <div id="branchChart" class="bar-chart"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <!-- Today's Summary -->
             <div class="card">
                 <div class="card-header">
                     <h3>📅 ملخص اليوم</h3>
@@ -446,15 +417,11 @@ try {
                 </div>
                 <div class="card-body">
                     <div class="table-container">
-                        <div class="table-loading" id="todaySummaryLoading">
-                            <span class="loading"></span>
-                            <span>جاري التحميل...</span>
-                        </div>
                         <table id="todaySummaryTable">
                             <thead>
                                 <tr>
                                     <th>الفرع</th>
-                                    <th>إجمالي الموظفين</th>
+                                    <th>إجمالي المستخدمين</th>
                                     <th>الحضور</th>
                                     <th>التأخير</th>
                                     <th>نسبة الحضور</th>
@@ -480,10 +447,6 @@ try {
                 </div>
                 <div class="card-body">
                     <div class="table-container">
-                        <div class="table-loading" id="attendanceLoading">
-                            <span class="loading"></span>
-                            <span>جاري التحميل...</span>
-                        </div>
                         <table id="attendanceTable">
                             <thead>
                                 <tr>
@@ -508,33 +471,15 @@ try {
         <div id="employees" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <h3>👥 إدارة الموظفين</h3>
+                    <h3>👥 إدارة المستخدمين</h3>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button onclick="showAddEmployeeModal()" class="btn btn-success">➕ إضافة موظف</button>
+                        <button onclick="showAddEmployeeModal()" class="btn btn-success">➕ إضافة مستخدم</button>
                         <button onclick="showAddDefaultEmployeesModal()" class="btn btn-info">📋 إضافة البيانات الأساسية</button>
                         <button onclick="showBulkAttendanceModal()" class="btn btn-primary">📝 تسجيل حضور جماعي</button>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="table-toolbar">
-                        <input type="text" id="employeeSearch" placeholder="ابحث بالاسم أو الرقم أو الفرع">
-                        <select id="employeeBranchFilter">
-                            <option value="all">كل الفروع</option>
-                        </select>
-                        <select id="employeeSort">
-                            <option value="name-asc">ترتيب: الاسم (أ-ي)</option>
-                            <option value="name-desc">ترتيب: الاسم (ي-أ)</option>
-                            <option value="code-asc">ترتيب: رقم الموظف (تصاعدي)</option>
-                            <option value="code-desc">ترتيب: رقم الموظف (تنازلي)</option>
-                            <option value="points-desc">ترتيب: النقاط (أعلى)</option>
-                            <option value="points-asc">ترتيب: النقاط (أقل)</option>
-                        </select>
-                    </div>
                     <div class="table-container">
-                        <div class="table-loading" id="employeesLoading">
-                            <span class="loading"></span>
-                            <span>جاري التحميل...</span>
-                        </div>
                         <table id="employeesTable">
                             <thead>
                                 <tr>
@@ -570,7 +515,7 @@ try {
                                     <th>اسم الفرع</th>
                                     <th>العنوان</th>
                                     <th>الهاتف</th>
-                                    <th>عدد الموظفين</th>
+                                    <th>عدد المستخدمين</th>
                                     <th>الإجراءات</th>
                                 </tr>
                             </thead>
@@ -722,7 +667,7 @@ try {
                                 <span style="font-size: 16px;">السماح للموظفين بالخروج من حساباتهم</span>
                             </label>
                             <small style="display: block; margin-top: 8px; color: #666; font-size: 14px;">
-                                ⚠️ عند إلغاء التحديد: يتم إخفاء زر الخروج من صفحة الموظف لمنع تسجيل الحضور بدلاً من الزملاء
+                                عند التحديد: يظهر زر «خروج» في صفحة الموظف. عند إلغاء التحديد: يُخفى زر الخروج ويمنع فتح صفحة الخروج لمنع تسجيل الحضور بدلاً من الزملاء. لا يؤثر على إمكانية الدخول لصفحة الموظف أو عمل الحضور والانصراف.
                             </small>
                         </div>
                     </div>
@@ -1062,7 +1007,7 @@ try {
                 <span class="close" onclick="closeModal('defaultEmployeesModal')">&times;</span>
             </div>
             <div class="modal-body">
-                <p style="color: #666; margin-bottom: 15px;">هل تريد إضافة قائمة الموظفين الأساسية؟ سيتم إضافة 17 موظف.</p>
+                <p style="color: #666; margin-bottom: 15px;">هل تريد إضافة قائمة المستخدمين الأساسية؟ سيتم إضافة 17 مستخدم.</p>
                 <div class="table-container" style="max-height: 400px; overflow-y: auto; margin-bottom: 15px;">
                     <table id="defaultEmployeesTable" style="width: 100%; font-size: 13px;">
                         <thead>
@@ -1112,7 +1057,7 @@ try {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>تحديد الموظفين</label>
+                    <label>تحديد المستخدمين</label>
                     <div style="border: 1px solid #ddd; border-radius: 8px; max-height: 250px; overflow-y: auto; padding: 10px; background: #f9f9f9;">
                         <div style="margin-bottom: 10px; padding: 8px; background: white; border-radius: 5px;">
                             <input type="checkbox" id="bulkSelectAll" onchange="toggleAllBulkEmployees(this.checked)">
@@ -1130,67 +1075,10 @@ try {
         </div>
     </div>
 
-            </div>
-        </div>
-    </div>
     <script>
+        // متغيرات عامة
         let currentTab = 'dashboard';
         let systemSettings = {};
-        let employeesCache = [];
-        let employeeFilters = { search: '', branch: 'all', sort: 'name-asc' };
-        let lastDashboardStats = null;
-        let lastDashboardBranches = [];
-
-        function setTableLoading(id, isLoading) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.style.display = isLoading ? 'flex' : 'none';
-        }
-
-        function setTheme(theme) {
-            document.body.dataset.theme = theme;
-            localStorage.setItem('theme', theme);
-            document.querySelectorAll('.theme-toggle').forEach(btn => {
-                const icon = btn.querySelector('.material-icons');
-                const label = btn.querySelector('span:last-child');
-                if (icon) icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-                if (label) label.textContent = theme === 'dark' ? 'الوضع الفاتح' : 'الوضع الداكن';
-            });
-        }
-
-        function initTheme() {
-            const saved = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            setTheme(saved || (prefersDark ? 'dark' : 'light'));
-            document.querySelectorAll('.theme-toggle').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    setTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark');
-                });
-            });
-        }
-
-        function toggleSidebar() {
-            document.body.classList.toggle('sidebar-collapsed');
-            localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed') ? '1' : '0');
-        }
-
-        function initSidebar() {
-            const collapsed = localStorage.getItem('sidebar-collapsed') === '1';
-            if (collapsed) document.body.classList.add('sidebar-collapsed');
-            const toggle = document.getElementById('sidebarToggle');
-            if (toggle) toggle.addEventListener('click', toggleSidebar);
-        }
-
-        function toggleNavGroup(id) {
-            const group = document.getElementById(id);
-            if (group) group.classList.toggle('open');
-        }
-
-        function syncActiveNav(tabName) {
-            document.querySelectorAll('.nav-link[data-tab]').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === tabName);
-            });
-        }
         
         // دالة مساعدة للتعامل مع طلبات API
         async function apiRequest(action, data = {}) {
@@ -1265,12 +1153,21 @@ try {
 
         // تبديل التبويبات
         function showTab(tabName) {
+            // إخفاء جميع التبويبات
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
-            const targetTab = document.getElementById(tabName);
-            if (targetTab) targetTab.classList.add('active');
-            syncActiveNav(tabName);
+            
+            // إزالة الفئة النشطة من جميع الأزرار
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // إظهار التبويب المحدد
+            document.getElementById(tabName).classList.add('active');
+            
+            // تفعيل الزر المحدد
+            event.target.classList.add('active');
             
             currentTab = tabName;
             
@@ -1303,7 +1200,6 @@ try {
         // تحميل بيانات لوحة التحكم
         async function loadDashboardData() {
             try {
-                setTableLoading('todaySummaryLoading', true);
                 const response = await fetch('admin_api.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1314,13 +1210,10 @@ try {
                 if (result.success) {
                     updateDashboardStats(result.data.stats);
                     updateTodaySummary(result.data.branches);
-                    updateDashboardCharts(result.data.stats, result.data.branches);
                     updateSystemStatus();
                 }
             } catch (error) {
                 console.error('خطأ في تحميل بيانات لوحة التحكم:', error);
-            } finally {
-                setTableLoading('todaySummaryLoading', false);
             }
         }
 
@@ -1337,12 +1230,6 @@ try {
             const tbody = document.querySelector('#todaySummaryTable tbody');
             tbody.innerHTML = '';
             
-            if (!branches || branches.length === 0) {
-                const row = tbody.insertRow();
-                row.innerHTML = `<td colspan="6">لا توجد بيانات متاحة</td>`;
-                return;
-            }
-
             branches.forEach(branch => {
                 const attendanceRate = branch.total_employees > 0 ? 
                     Math.round(((branch.present_count || 0) / branch.total_employees) * 100) : 0;
@@ -1356,46 +1243,6 @@ try {
                     <td><span class="badge badge-secondary">${attendanceRate}%</span></td>
                     <td><span class="badge badge-warning">${branch.total_deductions || 0}</span></td>
                 `;
-            });
-        }
-
-        function updateDashboardCharts(stats, branches) {
-            lastDashboardStats = stats || {};
-            lastDashboardBranches = branches || [];
-            const total = Number(lastDashboardStats.total_employees || 0);
-            const present = Number(lastDashboardStats.present_count || 0);
-            const late = Number(lastDashboardStats.late_count || 0);
-            const onTime = Math.max(present - late, 0);
-            const absent = Math.max(total - present, 0);
-            const sum = Math.max(onTime + late + absent, 1);
-            const onTimeDeg = (onTime / sum) * 360;
-            const lateDeg = (late / sum) * 360;
-            const donut = document.getElementById('attendanceDonut');
-            const donutValue = document.getElementById('attendanceDonutValue');
-            if (donut) {
-                donut.style.background = `conic-gradient(var(--success) 0deg ${onTimeDeg}deg, var(--warning) ${onTimeDeg}deg ${onTimeDeg + lateDeg}deg, var(--danger) ${onTimeDeg + lateDeg}deg 360deg)`;
-            }
-            if (donutValue) {
-                donutValue.textContent = `${lastDashboardStats.attendance_rate || 0}%`;
-            }
-            const chartSummary = document.getElementById('chartSummary');
-            if (chartSummary) {
-                chartSummary.textContent = `حضور ${present} | متأخر ${late} | غياب ${absent}`;
-            }
-            const branchChart = document.getElementById('branchChart');
-            if (!branchChart) return;
-            branchChart.innerHTML = '';
-            lastDashboardBranches.forEach(branch => {
-                const rate = branch.total_employees > 0 ? 
-                    Math.round(((branch.present_count || 0) / branch.total_employees) * 100) : 0;
-                const item = document.createElement('div');
-                item.className = 'bar-item';
-                item.innerHTML = `
-                    <span>${branch.name}</span>
-                    <div class="bar"><span style="width: ${rate}%"></span></div>
-                    <strong>${rate}%</strong>
-                `;
-                branchChart.appendChild(item);
             });
         }
 
@@ -1556,7 +1403,6 @@ try {
             const date = document.getElementById('attendanceDate').value;
             
             try {
-                setTableLoading('attendanceLoading', true);
                 const response = await fetch('admin_api.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1572,8 +1418,6 @@ try {
                 }
             } catch (error) {
                 console.error('خطأ في تحميل سجلات الحضور:', error);
-            } finally {
-                setTableLoading('attendanceLoading', false);
             }
         }
 
@@ -1582,12 +1426,6 @@ try {
             const tbody = document.querySelector('#attendanceTable tbody');
             tbody.innerHTML = '';
             
-            if (!records || records.length === 0) {
-                const row = tbody.insertRow();
-                row.innerHTML = `<td colspan="8">لا توجد سجلات لهذا التاريخ</td>`;
-                return;
-            }
-
             records.forEach(record => {
                 const row = tbody.insertRow();
                 const statusClass = record.deduction_points > 0 ? 'badge-danger' : 'badge-success';
@@ -1612,7 +1450,6 @@ try {
         // تحميل الموظفين
         async function loadEmployees() {
             try {
-                setTableLoading('employeesLoading', true);
                 const response = await fetch('admin_api.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1621,14 +1458,10 @@ try {
                 
                 const result = await response.json();
                 if (result.success) {
-                    employeesCache = Array.isArray(result.data) ? result.data.slice() : [];
-                    hydrateEmployeeFilters();
-                    renderEmployees();
+                    updateEmployeesTable(result.data);
                 }
             } catch (error) {
                 console.error('خطأ في تحميل الموظفين:', error);
-            } finally {
-                setTableLoading('employeesLoading', false);
             }
         }
 
@@ -1717,61 +1550,10 @@ try {
         }
 
         // تحديث جدول الموظفين
-        function hydrateEmployeeFilters() {
-            const branchSelect = document.getElementById('employeeBranchFilter');
-            if (branchSelect) {
-                const branches = Array.from(new Set(employeesCache.map(e => e.branch_name).filter(Boolean)));
-                branchSelect.innerHTML = '<option value="all">كل الفروع</option>' + branches.map(b => `<option value="${b}">${b}</option>`).join('');
-                branchSelect.value = employeeFilters.branch || 'all';
-            }
-            const search = document.getElementById('employeeSearch');
-            if (search) search.value = employeeFilters.search || '';
-            const sort = document.getElementById('employeeSort');
-            if (sort) sort.value = employeeFilters.sort || 'name-asc';
-            if (branchSelect) branchSelect.onchange = () => { employeeFilters.branch = branchSelect.value; renderEmployees(); };
-            if (search) search.oninput = () => { employeeFilters.search = search.value.trim(); renderEmployees(); };
-            if (sort) sort.onchange = () => { employeeFilters.sort = sort.value; renderEmployees(); };
-        }
-
-        function renderEmployees() {
-            let employees = employeesCache.slice();
-            const search = (employeeFilters.search || '').toLowerCase();
-            const branch = employeeFilters.branch || 'all';
-            if (search) {
-                employees = employees.filter(e => 
-                    String(e.employee_code || '').toLowerCase().includes(search) ||
-                    String(e.name || '').toLowerCase().includes(search) ||
-                    String(e.branch_name || '').toLowerCase().includes(search)
-                );
-            }
-            if (branch !== 'all') {
-                employees = employees.filter(e => e.branch_name === branch);
-            }
-            const sort = employeeFilters.sort || 'name-asc';
-            employees.sort((a, b) => {
-                switch (sort) {
-                    case 'name-asc': return String(a.name || '').localeCompare(String(b.name || ''));
-                    case 'name-desc': return String(b.name || '').localeCompare(String(a.name || ''));
-                    case 'code-asc': return Number(a.employee_code || 0) - Number(b.employee_code || 0);
-                    case 'code-desc': return Number(b.employee_code || 0) - Number(a.employee_code || 0);
-                    case 'points-desc': return Number(b.points_balance || 0) - Number(a.points_balance || 0);
-                    case 'points-asc': return Number(a.points_balance || 0) - Number(b.points_balance || 0);
-                }
-                return 0;
-            });
-            updateEmployeesTable(employees);
-        }
-
         function updateEmployeesTable(employees) {
             const tbody = document.querySelector('#employeesTable tbody');
             tbody.innerHTML = '';
             
-            if (!employees || employees.length === 0) {
-                const row = tbody.insertRow();
-                row.innerHTML = `<td colspan="8">لا توجد نتائج مطابقة</td>`;
-                return;
-            }
-
             employees.forEach(employee => {
                 const row = tbody.insertRow();
                 const branchColor = getBranchColor(employee.branch_name);
@@ -1851,7 +1633,7 @@ try {
 
         // حذف فرع
         async function deleteBranch(branchId) {
-            if (!confirm('هل أنت متأكد من حذف هذا الفرع؟ يجب نقل الموظفين إلى فرع آخر أولاً.')) {
+            if (!confirm('هل أنت متأكد من حذف هذا الفرع؟ يجب نقل المستخدمين إلى فرع آخر أولاً.')) {
                 return;
             }
             
@@ -2221,12 +2003,9 @@ try {
 
         // التشغيل الأولي
         document.addEventListener('DOMContentLoaded', function() {
-            initTheme();
-            initSidebar();
             updateCurrentDate();
             loadDashboardData();
             loadBranches(); // تحميل الفروع عند بدء الصفحة
-            syncActiveNav('dashboard');
             
             // مراقبة تغييرات حقول النقاط
             ['gracePeriod', 'penalty1', 'penalty2', 'penalty3', 'penalty4'].forEach(id => {
@@ -2267,7 +2046,7 @@ try {
             }
         }
 
-        // قائمة الموظفين الأساسية
+        // قائمة المستخدمين الأساسية
         const rawDefaultEmployees = [
             {name: "Arnous", branch: "صرح الإتقان الأمريكي", position: "كهربائي", phone: "966500089178"},
             {name: "Bilal", branch: "صرح الإتقان الأمريكي", position: "ميكانيكي", phone: "966594154009"},
@@ -2324,7 +2103,7 @@ try {
             };
         });
 
-        // عرض نافذة إضافة الموظفين الافتراضيين
+        // عرض نافذة إضافة المستخدمين الافتراضيين
         async function showAddDefaultEmployeesModal() {
             // تحميل الجدول
             const tbody = document.querySelector('#defaultEmployeesTable tbody');
@@ -2390,7 +2169,7 @@ try {
                 btn.disabled = false;
                 btn.textContent = '✅ إضافة الجميع';
             } catch (error) {
-                showAlert('حدث خطأ في إضافة الموظفين', 'error');
+                showAlert('حدث خطأ في إضافة المستخدمين', 'error');
                 const btn = event ? event.target : document.querySelector('#defaultEmployeesModal .btn-success');
                 if (btn) {
                     btn.disabled = false;
@@ -3104,73 +2883,6 @@ try {
                 // For now we just call the API endpoint if it exists
                 showAlert('ميزة الاستعادة تتطلب صلاحيات خاصة (تجريبية)', 'warning');
             } catch (error) { showAlert('حدث خطأ', 'error'); }
-        }
-        
-        // Mobile sidebar toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.getElementById('sidebar');
-            
-            if (sidebarToggle && sidebar) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('mobile-open');
-                });
-            }
-            
-            // Close sidebar when clicking outside on mobile
-            if (window.innerWidth <= 768) {
-                document.addEventListener('click', function(e) {
-                    if (sidebar && sidebar.classList.contains('mobile-open')) {
-                        if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-                            sidebar.classList.remove('mobile-open');
-                        }
-                    }
-                });
-            }
-        });
-    </script>
-    
-    <div class="admin-action-dock">
-        <button onclick="showAddEmployeeModal()" class="btn btn-success">➕ إضافة موظف</button>
-        <button onclick="showAddBranchModal()" class="btn btn-info">🏢 إضافة فرع</button>
-        <button onclick="showBulkAttendanceModal()" class="btn btn-primary dock-wide">📝 حضور جماعي</button>
-    </div>
-
-    <!-- Mobile Bottom Navigation -->
-    <nav class="admin-mobile-nav active">
-        <button class="admin-nav-item" onclick="document.getElementById('sidebarToggle').click();">
-            <span class="icon material-icons">menu</span>
-            <span>القائمة</span>
-        </button>
-        <a href="#dashboard" class="admin-nav-item" onclick="showTab('dashboard'); return false;">
-            <span class="icon material-icons">dashboard</span>
-            <span>الرئيسية</span>
-        </a>
-        <a href="#employees" class="admin-nav-item" onclick="showTab('employees'); return false;">
-            <span class="icon material-icons">people</span>
-            <span>الموظفين</span>
-        </a>
-        <a href="#settings" class="admin-nav-item" onclick="showTab('settings'); return false;">
-            <span class="icon material-icons">settings</span>
-            <span>الإعدادات</span>
-        </a>
-    </nav>
-    
-    <script>
-        // Update active nav item on tab change
-        function showTab(tabName) {
-            // Remove active class from all nav items
-            document.querySelectorAll('.admin-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Add active class to clicked item
-            event.currentTarget.classList.add('active');
-            
-            // Call existing showTab function if it exists
-            if (typeof window.showTab === 'function') {
-                window.showTab(tabName);
-            }
         }
     </script>
 </body>

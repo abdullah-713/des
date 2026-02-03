@@ -7,9 +7,6 @@ const DYNAMIC_CACHE = 'sarh-dynamic-v5';
 const STATIC_ASSETS = [
   '/',
   '/index.php',
-  '/index.php?source=pwa',
-  '/employee.php',
-  '/admin.php',
   '/logo.png',
   '/manifest.json',
   '/assets/css/variables.css',

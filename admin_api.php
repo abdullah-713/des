@@ -152,6 +152,10 @@ try {
             addDefaultEmployees($db, $input);
             break;
             
+        case 'remove_duplicate_employees':
+            removeDuplicateEmployees($db);
+            break;
+            
         case 'bulk_attendance_record':
             bulkAttendanceRecord($db, $input);
             break;
@@ -381,14 +385,18 @@ function addEmployee($db, $input) {
         // استخدام القيمة الافتراضية
     }
     
-    // إدراج الموظف الجديد
+    // كلمة المرور مشفرة (مثل المدير): اختيارية، إن لم تُدخل تُستخدم الافتراضية
+    $password = $input['password'] ?? '';
+    $passwordHash = $password !== '' ? password_hash($password, PASSWORD_DEFAULT) : password_hash('123456', PASSWORD_DEFAULT);
+    
+    // إدراج المستخدم الجديد
     $stmt = $db->prepare("
         INSERT INTO employees 
-        (employee_code, name, branch_id, position, phone, email, start_time, end_time, points_balance, is_active) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+        (employee_code, name, branch_id, position, phone, email, start_time, end_time, points_balance, is_active, password) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
     ");
     
-    if ($stmt->execute([$employeeCode, $name, $branchId, $position, $phone, $email, $startTime, $endTime, $defaultPoints])) {
+    if ($stmt->execute([$employeeCode, $name, $branchId, $position, $phone, $email, $startTime, $endTime, $defaultPoints, $passwordHash])) {
         $employeeId = $db->lastInsertId();
         
         // لا نضيف سجل حضور افتراضي - الموظف سيسجل بنفسه عند الحضور
@@ -417,37 +425,39 @@ function updateEmployee($db, $input) {
     $startTime = $input['start_time'] ?? '08:00:00';
     $endTime = $input['end_time'] ?? '17:00:00';
     $isActive = (int)($input['is_active'] ?? 1);
+    $customCheckInStart = !empty($input['custom_check_in_start']) ? $input['custom_check_in_start'] : null;
+    $customCheckInEnd = !empty($input['custom_check_in_end']) ? $input['custom_check_in_end'] : null;
+    $customCheckOutStart = !empty($input['custom_check_out_start']) ? $input['custom_check_out_start'] : null;
     
     if ($employeeId <= 0 || empty($employeeCode) || empty($name) || $branchId <= 0) {
         jsonResponse(['success' => false, 'message' => 'يرجى ملء جميع الحقول المطلوبة']);
     }
     
-    // التحقق من عدم تكرار رقم الموظف
     $stmt = $db->prepare("SELECT id FROM employees WHERE employee_code = ? AND id != ?");
     $stmt->execute([$employeeCode, $employeeId]);
     if ($stmt->fetch()) {
-        jsonResponse(['success' => false, 'message' => 'رقم الموظف موجود مسبقاً']);
+        jsonResponse(['success' => false, 'message' => 'رقم المستخدم موجود مسبقاً']);
     }
     
-    // التحقق من صحة البريد الإلكتروني
     if (!empty($email) && !isValidEmail($email)) {
         jsonResponse(['success' => false, 'message' => 'البريد الإلكتروني غير صحيح']);
     }
     
-    // تحديث بيانات الموظف
-    $stmt = $db->prepare("
-        UPDATE employees 
-        SET employee_code = ?, name = ?, branch_id = ?, position = ?, 
-            phone = ?, email = ?, start_time = ?, end_time = ?, 
-            custom_check_in_start = ?, custom_check_in_end = ?, custom_check_out_start = ?,
-            is_active = ?
-        WHERE id = ?
-    ");
+    $sql = "UPDATE employees SET employee_code = ?, name = ?, branch_id = ?, position = ?, phone = ?, email = ?, start_time = ?, end_time = ?, custom_check_in_start = ?, custom_check_in_end = ?, custom_check_out_start = ?, is_active = ?";
+    $params = [$employeeCode, $name, $branchId, $position, $phone, $email, $startTime, $endTime, $customCheckInStart, $customCheckInEnd, $customCheckOutStart, $isActive];
     
-    if ($stmt->execute([$employeeCode, $name, $branchId, $position, $phone, $email, $startTime, $endTime, $customCheckInStart, $customCheckInEnd, $customCheckOutStart, $isActive, $employeeId])) {
-        jsonResponse(['success' => true, 'message' => 'تم تحديث بيانات الموظف بنجاح']);
+    if (!empty($input['password'])) {
+        $sql .= ", password = ?";
+        $params[] = password_hash($input['password'], PASSWORD_DEFAULT);
+    }
+    $params[] = $employeeId;
+    $sql .= " WHERE id = ?";
+    
+    $stmt = $db->prepare($sql);
+    if ($stmt->execute($params)) {
+        jsonResponse(['success' => true, 'message' => 'تم تحديث بيانات المستخدم بنجاح']);
     } else {
-        jsonResponse(['success' => false, 'message' => 'فشل في تحديث بيانات الموظف']);
+        jsonResponse(['success' => false, 'message' => 'فشل في تحديث البيانات']);
     }
 }
 

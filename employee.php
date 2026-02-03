@@ -52,7 +52,7 @@ if (!$logoPath || !file_exists($logoPath)) {
             backdrop-filter: blur(5px);
         }
         .privacy-content {
-            background-color: var(--bg-card);
+            background-color: #fff;
             margin: 5% auto;
             padding: 0;
             border-radius: 15px;
@@ -65,7 +65,7 @@ if (!$logoPath || !file_exists($logoPath)) {
         }
         .privacy-header {
             padding: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
             color: white;
             border-radius: 15px 15px 0 0;
             display: flex;
@@ -77,13 +77,13 @@ if (!$logoPath || !file_exists($logoPath)) {
             overflow-y: auto;
             line-height: 1.8;
             font-size: 1.1rem;
-            color: var(--text-main);
+            color: #334155;
             flex-grow: 1;
         }
         .privacy-footer {
             padding: 20px;
-            background: var(--bg-elevated);
-            border-top: 1px solid var(--border-color);
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
             border-radius: 0 0 15px 15px;
             text-align: center;
         }
@@ -96,7 +96,7 @@ if (!$logoPath || !file_exists($logoPath)) {
         }
         .lang-tab {
             padding: 8px 16px;
-            background: var(--bg-elevated);
+            background: #f1f5f9;
             border: none;
             border-radius: 20px;
             cursor: pointer;
@@ -104,11 +104,11 @@ if (!$logoPath || !file_exists($logoPath)) {
             transition: all 0.3s;
         }
         .lang-tab.active {
-            background: var(--primary);
+            background: #f97316;
             color: white;
         }
         #acceptBtn {
-            background: var(--success);
+            background: #10b981;
             color: white;
             padding: 12px 40px;
             border: none;
@@ -149,7 +149,7 @@ if (!$logoPath || !file_exists($logoPath)) {
                 <!-- Content will be loaded here -->
             </div>
             <div class="privacy-footer">
-                <div style="margin-bottom: 15px; font-weight: 600; color: var(--text-muted);">
+                <div style="margin-bottom: 15px; font-weight: 600; color: #64748b;">
                     يرجى قراءة الوثيقة بعناية. يمكنك الموافقة بعد <span id="timer">60</span> ثانية.
                 </div>
                 <button id="acceptBtn" disabled onclick="acceptPrivacy()">أوافق على الشروط والأحكام</button>
@@ -209,7 +209,6 @@ if (!$logoPath || !file_exists($logoPath)) {
             <div class="employee-welcome">
         👋 <?php echo __('welcome'); ?> <strong style="cursor: pointer; text-decoration: underline;" onclick="openProfile()"><?php echo htmlspecialchars($employeeName); ?></strong>
         <button onclick="openProfile()" class="btn-profile-icon">👤</button>
-        <button id="empThemeToggle" class="btn-profile-icon" title="الوضع الداكن"><span class="material-icons" style="font-size: 18px;">dark_mode</span></button>
     </div>
             <div class="current-time" id="currentTime">--:--:--</div>
             <div id="currentDate"></div>
@@ -343,24 +342,6 @@ if (!$logoPath || !file_exists($logoPath)) {
         let bannerInterval;
         let privacyTimerInterval;
         let privacyTimeLeft = 60;
-        function setTheme(theme) {
-            document.body.dataset.theme = theme;
-            localStorage.setItem('theme', theme);
-            const btn = document.getElementById('empThemeToggle');
-            if (btn) {
-                const icon = btn.querySelector('.material-icons');
-                if (icon) icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-            }
-        }
-        function initTheme() {
-            const saved = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            setTheme(saved || (prefersDark ? 'dark' : 'light'));
-            const btn = document.getElementById('empThemeToggle');
-            if (btn) btn.addEventListener('click', () => {
-                setTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark');
-            });
-        }
 
         // Privacy Policy Content (Multi-language)
         const privacyContent = {
@@ -1092,7 +1073,6 @@ if (!$logoPath || !file_exists($logoPath)) {
 
         // التشغيل الأولي
         document.addEventListener('DOMContentLoaded', function() {
-            initTheme();
             checkPrivacyAcceptance(); // Check Privacy Policy First
             updateDateTime();
             setInterval(updateDateTime, 1000);
@@ -1139,20 +1119,20 @@ if (!$logoPath || !file_exists($logoPath)) {
             infoDiv.innerHTML = `
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; text-align: center;">
                     <div>
-                        <div style="font-size: 0.9rem; color: var(--text-muted);">الفرع</div>
-                        <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">${data.branch_name}</div>
+                        <div style="font-size: 0.9rem; color: #64748b;">الفرع</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">${data.branch_name}</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.9rem; color: var(--text-muted);">وقت الحضور</div>
-                        <div style="font-size: 1.1rem; font-weight: 700; color: var(--success);">${data.check_in_time || '--:--'}</div>
+                        <div style="font-size: 0.9rem; color: #64748b;">وقت الحضور</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #10b981;">${data.check_in_time || '--:--'}</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.9rem; color: var(--text-muted);">الحالة</div>
+                        <div style="font-size: 0.9rem; color: #64748b;">الحالة</div>
                         <div style="font-size: 1.1rem; font-weight: 700; color: ${statusMeta.color};">${statusMeta.text}</div>
                     </div>
                     <div>
-                        <div style="font-size: 0.9rem; color: var(--text-muted);">النقاط المخصومة</div>
-                        <div style="font-size: 1.1rem; font-weight: 700; color: var(--danger);">${data.deduction_points || 0}</div>
+                        <div style="font-size: 0.9rem; color: #64748b;">النقاط المخصومة</div>
+                        <div style="font-size: 1.1rem; font-weight: 700; color: ${data.deduction_points > 0 ? '#ef4444' : '#10b981'};">${data.deduction_points || 0}</div>
                     </div>
                 </div>
             `;
@@ -1225,60 +1205,6 @@ if (!$logoPath || !file_exists($logoPath)) {
                 }
             });
         }
-    </script>
-    
-    <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-bottom-nav active">
-        <a href="#attendance" class="mobile-nav-item active" onclick="scrollToSection('attendance')">
-            <span class="icon">✅</span>
-            <span>الحضور</span>
-        </a>
-        <a href="#stats" class="mobile-nav-item" onclick="scrollToSection('stats')">
-            <span class="icon">📊</span>
-            <span>الإحصائيات</span>
-        </a>
-        <a href="#profile" class="mobile-nav-item" onclick="openProfile(); return false;">
-            <span class="icon">👤</span>
-            <span>الملف الشخصي</span>
-        </a>
-        <a href="#branches" class="mobile-nav-item" onclick="scrollToSection('branches')">
-            <span class="icon">🏢</span>
-            <span>الفروع</span>
-        </a>
-    </nav>
-    
-    <script>
-        // Mobile navigation scroll handler
-        function scrollToSection(id) {
-            const section = document.getElementById(id) || document.querySelector(`[id*="${id}"]`);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            
-            // Update active nav item
-            document.querySelectorAll('.mobile-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-        }
-        
-        // Add IDs to sections for navigation
-        document.addEventListener('DOMContentLoaded', function() {
-            const attendanceSection = document.querySelector('.attendance-section');
-            if (attendanceSection && !attendanceSection.id) {
-                attendanceSection.id = 'attendance';
-            }
-            
-            const statsSection = document.querySelector('.stats-grid');
-            if (statsSection && !statsSection.id) {
-                statsSection.id = 'stats';
-            }
-            
-            const branchesSection = document.querySelector('#branchStats');
-            if (branchesSection && !branchesSection.closest('div').id) {
-                branchesSection.closest('div').id = 'branches';
-            }
-        });
     </script>
 </body>
 </html>

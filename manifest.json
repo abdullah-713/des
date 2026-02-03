@@ -1,5 +1,5 @@
 {
-  "name": "نظام الحضور الذكي - صرح انضباط",
+  "name": "نظام الحضور الذكي",
   "short_name": "صرح انضباط",
   "description": "نظام إدارة الحضور والانصراف للموظفين - تطبيق احترافي قابل للتثبيت",
   "start_url": "/index.php?source=pwa",
@@ -65,13 +65,7 @@
       "src": "logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "logo.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "screenshots": [

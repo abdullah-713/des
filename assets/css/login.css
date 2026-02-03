@@ -264,7 +264,6 @@ body::before {
     position: relative;
     z-index: 1;
 }
-
 .form-group input:focus {
     outline: none;
     border-color: var(--primary);
@@ -312,7 +311,6 @@ body::before {
 .btn-login:hover::before {
     left: 100%;
 }
-
 .btn-login:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);

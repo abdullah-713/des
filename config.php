@@ -22,7 +22,6 @@ define('ENABLE_ERROR_DISPLAY', false); // عرض الأخطاء للتشخيص (
 define('SESSION_LIFETIME', 3600); // مدة الجلسة بالثواني (ساعة واحدة)
 define('MAX_LOGIN_ATTEMPTS', 5); // الحد الأقصى لمحاولات تسجيل الدخول
 define('LOGIN_TIMEOUT', 900); // وقت الحظر بعد تجاوز المحاولات (15 دقيقة)
-
 // تعيين المنطقة الزمنية
 date_default_timezone_set(TIMEZONE);
 
@@ -37,17 +36,36 @@ if (ENABLE_ERROR_DISPLAY) {
     ini_set('error_log', __DIR__ . '/error.log');
 }
 
-// إعدادات الجلسة الآمنة
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-ini_set('session.cookie_samesite', 'Strict');
-if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
-    ini_set('session.cookie_secure', 1);
-}
+// إعدادات الجلسة (مناسبة للموبايل: Lax + كشف HTTPS خلف البروكسي)
 ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+if (PHP_VERSION_ID >= 70300) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '',
+        'secure' => $isHttps,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+} else {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    if ($isHttps) ini_set('session.cookie_secure', 1);
+}
+ini_set('session.use_only_cookies', 1);
 
 // إعدادات اللغة
 define('DEFAULT_LANG', 'ar');
+if (isset($_GET['lang']) && in_array($_GET['lang'], ['ar', 'en'])) {
+    $_SESSION['lang'] = $_GET['lang'];
+}
+if (!isset($_SESSION['lang'])) {
+    $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'ar', 0, 2);
+    $_SESSION['lang'] = in_array($browserLang, ['ar', 'en']) ? $browserLang : DEFAULT_LANG;
+}
 
 // معالجة تبديل اللغة
 if (isset($_GET['lang']) && in_array($_GET['lang'], ['ar', 'en'])) {
@@ -86,7 +104,7 @@ $translations = [
         'rewards' => 'مكافآت',
         'branch' => 'الفرع',
         'dashboard' => 'لوحة التحكم',
-        'employees' => 'الموظفين',
+        'employees' => 'المستخدمين',
         'branches' => 'الفروع',
         'settings' => 'الإعدادات',
         'system_enabled' => 'النظام مفعل',
@@ -119,7 +137,7 @@ $translations = [
         'rewards' => 'Rewards',
         'branch' => 'Branch',
         'dashboard' => 'Dashboard',
-        'employees' => 'Employees',
+        'employees' => 'Users',
         'branches' => 'Branches',
         'settings' => 'Settings',
         'system_enabled' => 'System Enabled',
@@ -137,15 +155,6 @@ function __($key) {
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
     
-    // إعداد اللغة (بعد بدء الجلسة)
-    if (isset($_GET['lang']) && in_array($_GET['lang'], ['ar', 'en'])) {
-        $_SESSION['lang'] = $_GET['lang'];
-    }
-    if (empty($_SESSION['lang'])) {
-        $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'ar', 0, 2);
-        $_SESSION['lang'] = in_array($browserLang, ['ar', 'en']) ? $browserLang : DEFAULT_LANG;
-    }
-    
     // حماية من session hijacking
     if (!isset($_SESSION['initiated'])) {
         session_regenerate_id(true);
@@ -154,10 +163,12 @@ if (session_status() == PHP_SESSION_NONE) {
         $_SESSION['ip_address'] = getRealIpAddr();
     }
     
-    // التحقق من صحة الجلسة
-    if (isset($_SESSION['user_agent'], $_SESSION['ip_address'])) {
-        if ($_SESSION['user_agent'] !== ($_SERVER['HTTP_USER_AGENT'] ?? '') ||
-            $_SESSION['ip_address'] !== getRealIpAddr()) {
+    // التحقق من صحة الجلسة (لجلسات الإدارة فقط - لا نلغي جلسة الموظف عند تغيّر بسيط في IP/User-Agent)
+    if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] &&
+        isset($_SESSION['user_agent'], $_SESSION['ip_address'])) {
+        $currentIp = getRealIpAddr();
+        $currentUa = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        if ($_SESSION['user_agent'] !== $currentUa || $_SESSION['ip_address'] !== $currentIp) {
             session_unset();
             session_destroy();
             session_start();
@@ -655,15 +666,21 @@ function isAjaxRequest() {
            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 }
 
-// الحصول على عنوان IP الحقيقي
+// الحصول على عنوان IP الحقيقي (أول IP فقط عند وجود قائمة خلف بروكسي)
 function getRealIpAddr() {
+    $ip = '';
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        return $_SERVER['HTTP_CLIENT_IP'];
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
     } else {
-        return $_SERVER['REMOTE_ADDR'];
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '';
     }
+    // عند وجود عدة عناوين (عميل، بروكسي...) نأخذ أول واحد فقط لتفادي اختلاف الجلسة بين الطلبات
+    if (strpos($ip, ',') !== false) {
+        $ip = trim(explode(',', $ip)[0]);
+    }
+    return $ip;
 }
 
 ?>

@@ -96,7 +96,6 @@ if (!file_exists($logoPath)) {
     <meta name="description" content="نظام الحضور الذكي - صرح انضباط">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="<?php echo htmlspecialchars($logoPath ?: 'logo.png'); ?>">
-    <link rel="icon" type="image/png" href="<?php echo htmlspecialchars($logoPath ?: 'logo.png'); ?>">
     <title><?php echo htmlspecialchars($companyName); ?> - <?php echo __('app_name'); ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/login.css?v=<?php echo time(); ?>">
@@ -132,7 +131,7 @@ if (!file_exists($logoPath)) {
         <p class="app-subtitle"><?php echo __('app_name'); ?></p>
         
         <div class="clock" id="clock">--:--:--</div>
-        <div class="date-display" id="dateDisplay"><?php echo ($_SESSION['lang'] ?? 'ar') === 'ar' ? 'جاري التحميل...' : 'Loading...'; ?></div>
+        <div class="date-display" id="dateDisplay"><?php echo $_SESSION['lang'] === 'ar' ? 'جاري التحميل...' : 'Loading...'; ?></div>
         
         <p class="welcome-text">👋 <?php echo __('welcome'); ?></p>
         

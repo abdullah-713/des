@@ -660,7 +660,7 @@ body {
 
 .install-banner button {
     background: white;
-    color: var(--primary-dark);
+    color: #1d4ed8;
     border: none;
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-md);

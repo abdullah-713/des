@@ -1,8 +1,8 @@
 # إعدادات الاتصال بـ Hostinger
-$User = "u850419603_sarh"           
-$HostIP = "145.223.119.139"    
+$User = "u307296675"           
+$HostIP = "194.164.74.250"    
 $Port = "65002"                
-$RemotePath = "/home/u850419603/domains/sarh.online/public_html"
+$RemotePath = "/home/u307296675/domains/sarh.io/public_html"
 
 # التأكد من وجود أداة scp (عادة موجودة في Windows 10/11)
 if (-not (Get-Command scp -ErrorAction SilentlyContinue)) {

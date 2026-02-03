@@ -21,9 +21,7 @@ if (!$logoPath || !file_exists($logoPath)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f97316">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#1a237e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
@@ -1220,60 +1218,6 @@ if (!$logoPath || !file_exists($logoPath)) {
                 }
             });
         }
-    </script>
-    
-    <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-bottom-nav active">
-        <a href="#attendance" class="mobile-nav-item active" onclick="scrollToSection('attendance')">
-            <span class="icon">✅</span>
-            <span>الحضور</span>
-        </a>
-        <a href="#stats" class="mobile-nav-item" onclick="scrollToSection('stats')">
-            <span class="icon">📊</span>
-            <span>الإحصائيات</span>
-        </a>
-        <a href="#profile" class="mobile-nav-item" onclick="openProfile(); return false;">
-            <span class="icon">👤</span>
-            <span>الملف الشخصي</span>
-        </a>
-        <a href="#branches" class="mobile-nav-item" onclick="scrollToSection('branches')">
-            <span class="icon">🏢</span>
-            <span>الفروع</span>
-        </a>
-    </nav>
-    
-    <script>
-        // Mobile navigation scroll handler
-        function scrollToSection(id) {
-            const section = document.getElementById(id) || document.querySelector(`[id*="${id}"]`);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            
-            // Update active nav item
-            document.querySelectorAll('.mobile-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-        }
-        
-        // Add IDs to sections for navigation
-        document.addEventListener('DOMContentLoaded', function() {
-            const attendanceSection = document.querySelector('.attendance-section');
-            if (attendanceSection && !attendanceSection.id) {
-                attendanceSection.id = 'attendance';
-            }
-            
-            const statsSection = document.querySelector('.stats-grid');
-            if (statsSection && !statsSection.id) {
-                statsSection.id = 'stats';
-            }
-            
-            const branchesSection = document.querySelector('#branchStats');
-            if (branchesSection && !branchesSection.closest('div').id) {
-                branchesSection.closest('div').id = 'branches';
-            }
-        });
     </script>
 </body>
 </html>

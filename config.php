@@ -4,10 +4,10 @@
  * تكوين قاعدة البيانات والإعدادات العامة
  */
 
-// إعدادات قاعدة البيانات (sarh.online - Hostinger)
+// إعدادات قاعدة البيانات
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'u850419603_sarh');
-define('DB_USER', 'u850419603_sarh');
+define('DB_NAME', 'u307296675_app');
+define('DB_USER', 'u307296675_app');
 define('DB_PASS', 'Goolbx512!!');
 define('DB_CHARSET', 'utf8mb4');
 
@@ -18,7 +18,7 @@ define('TIME_FORMAT', 'H:i:s');
 define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 
 // إعدادات الأمان
-define('ENABLE_ERROR_DISPLAY', true); // عرض الأخطاء للتشخيص (غيّر إلى false بعد الإصلاح)
+define('ENABLE_ERROR_DISPLAY', false); // عرض الأخطاء في بيئة الإنتاج
 define('SESSION_LIFETIME', 3600); // مدة الجلسة بالثواني (ساعة واحدة)
 define('MAX_LOGIN_ATTEMPTS', 5); // الحد الأقصى لمحاولات تسجيل الدخول
 define('LOGIN_TIMEOUT', 900); // وقت الحظر بعد تجاوز المحاولات (15 دقيقة)
@@ -48,6 +48,13 @@ ini_set('session.gc_maxlifetime', SESSION_LIFETIME);
 
 // إعدادات اللغة
 define('DEFAULT_LANG', 'ar');
+if (isset($_GET['lang']) && in_array($_GET['lang'], ['ar', 'en'])) {
+    $_SESSION['lang'] = $_GET['lang'];
+}
+if (!isset($_SESSION['lang'])) {
+    $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'ar', 0, 2);
+    $_SESSION['lang'] = in_array($browserLang, ['ar', 'en']) ? $browserLang : DEFAULT_LANG;
+}
 
 $translations = [
     'ar' => [
@@ -127,15 +134,6 @@ function __($key) {
 // بدء الجلسة
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
-    
-    // إعداد اللغة (بعد بدء الجلسة)
-    if (isset($_GET['lang']) && in_array($_GET['lang'], ['ar', 'en'])) {
-        $_SESSION['lang'] = $_GET['lang'];
-    }
-    if (empty($_SESSION['lang'])) {
-        $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'ar', 0, 2);
-        $_SESSION['lang'] = in_array($browserLang, ['ar', 'en']) ? $browserLang : DEFAULT_LANG;
-    }
     
     // حماية من session hijacking
     if (!isset($_SESSION['initiated'])) {

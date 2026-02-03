@@ -1,56 +1,26 @@
 body {
     font-family: 'Cairo', sans-serif;
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.2), transparent 50%), linear-gradient(135deg, #f97316, #c2410c);
+    background: linear-gradient(135deg, #f97316, #c2410c);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0;
-    padding: 20px;
 }
-
 .login-container {
     background: white;
-    padding: 40px 30px;
-    border-radius: 22px;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.2);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     width: 100%;
-    max-width: 420px;
-    animation: slideUp 0.4s ease-out;
+    max-width: 400px;
 }
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 .login-container h1 {
     text-align: center;
-    color: #f97316;
+    color: #c2410c;
     margin-bottom: 30px;
     font-size: 2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #f97316, #c2410c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-@media (max-width: 480px) {
-    .login-container {
-        padding: 30px 20px;
-        border-radius: 16px;
-    }
-    
-    .login-container h1 {
-        font-size: 1.6rem;
-    }
 }
 .form-group {
     margin-bottom: 20px;
@@ -63,60 +33,30 @@ body {
 }
 .form-group input {
     width: 100%;
-    padding: 16px 18px;
-    border: 2px solid #f5d0b5;
-    border-radius: 14px;
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
     font-size: 16px;
-    transition: all 0.3s;
-    background: #fff7ed;
-    font-family: 'Cairo', sans-serif;
-    font-weight: 600;
-    min-height: 52px;
+    transition: border-color 0.3s;
 }
-
 .form-group input:focus {
     outline: none;
     border-color: #f97316;
-    background: white;
-    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
 }
-
 .btn-login {
     width: 100%;
-    padding: 18px;
+    padding: 15px;
     background: linear-gradient(135deg, #f97316, #c2410c);
     color: white;
     border: none;
-    border-radius: 14px;
-    font-size: 1.1rem;
-    font-weight: 800;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 12px 24px -14px rgba(194, 65, 12, 0.7);
-    min-height: 56px;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.3s;
 }
-
 .btn-login:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(249, 115, 22, 0.4);
-}
-
-.btn-login:active {
-    transform: translateY(-1px);
-}
-
-@media (max-width: 480px) {
-    .form-group input {
-        padding: 14px 16px;
-        font-size: 16px;
-    }
-    
-    .btn-login {
-        padding: 16px;
-        font-size: 1rem;
-    }
+    transform: translateY(-2px);
 }
 .error {
     background: #fee2e2;

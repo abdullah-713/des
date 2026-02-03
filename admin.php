@@ -233,9 +233,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#f97316">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#1a237e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
@@ -3079,73 +3077,6 @@ try {
                 // For now we just call the API endpoint if it exists
                 showAlert('ميزة الاستعادة تتطلب صلاحيات خاصة (تجريبية)', 'warning');
             } catch (error) { showAlert('حدث خطأ', 'error'); }
-        }
-        
-        // Mobile sidebar toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const sidebar = document.getElementById('sidebar');
-            
-            if (sidebarToggle && sidebar) {
-                sidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('mobile-open');
-                });
-            }
-            
-            // Close sidebar when clicking outside on mobile
-            if (window.innerWidth <= 768) {
-                document.addEventListener('click', function(e) {
-                    if (sidebar && sidebar.classList.contains('mobile-open')) {
-                        if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
-                            sidebar.classList.remove('mobile-open');
-                        }
-                    }
-                });
-            }
-        });
-    </script>
-    
-    <div class="admin-action-dock">
-        <button onclick="showAddEmployeeModal()" class="btn btn-success">➕ إضافة موظف</button>
-        <button onclick="showAddBranchModal()" class="btn btn-info">🏢 إضافة فرع</button>
-        <button onclick="showBulkAttendanceModal()" class="btn btn-primary dock-wide">📝 حضور جماعي</button>
-    </div>
-
-    <!-- Mobile Bottom Navigation -->
-    <nav class="admin-mobile-nav active">
-        <button class="admin-nav-item" onclick="document.getElementById('sidebarToggle').click();">
-            <span class="icon material-icons">menu</span>
-            <span>القائمة</span>
-        </button>
-        <a href="#dashboard" class="admin-nav-item" onclick="showTab('dashboard'); return false;">
-            <span class="icon material-icons">dashboard</span>
-            <span>الرئيسية</span>
-        </a>
-        <a href="#employees" class="admin-nav-item" onclick="showTab('employees'); return false;">
-            <span class="icon material-icons">people</span>
-            <span>الموظفين</span>
-        </a>
-        <a href="#settings" class="admin-nav-item" onclick="showTab('settings'); return false;">
-            <span class="icon material-icons">settings</span>
-            <span>الإعدادات</span>
-        </a>
-    </nav>
-    
-    <script>
-        // Update active nav item on tab change
-        function showTab(tabName) {
-            // Remove active class from all nav items
-            document.querySelectorAll('.admin-nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Add active class to clicked item
-            event.currentTarget.classList.add('active');
-            
-            // Call existing showTab function if it exists
-            if (typeof window.showTab === 'function') {
-                window.showTab(tabName);
-            }
         }
     </script>
 </body>

@@ -1,18 +1,12 @@
 // Service Worker for PWA
-const CACHE_NAME = 'attendance-cache-v4';
+const CACHE_NAME = 'attendance-cache-v2';
 const urlsToCache = [
   '/',
   '/index.php',
-  '/index.php?source=pwa',
   '/employee.php',
   '/admin.php',
   '/logo.png',
-  '/manifest.json',
-  '/assets/css/variables.css',
-  '/assets/css/style.css',
-  '/assets/css/admin.css',
-  '/assets/css/login.css',
-  'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap'
+  '/manifest.json'
 ];
 
 // Install event - cache files
@@ -43,10 +37,8 @@ self.addEventListener('activate', event => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', event => {
-  // Skip non-GET requests and API calls
-  if (event.request.method !== 'GET' || 
-      event.request.url.includes('_api.php') ||
-      event.request.url.includes('api.php')) {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') {
     return;
   }
 
@@ -79,21 +71,8 @@ self.addEventListener('fetch', event => {
         });
       })
       .catch(() => {
-        // Return cached index page if offline
-        return caches.match('/index.php') || caches.match('/');
+        // Return offline page if available
+        return caches.match('/offline.html');
       })
   );
 });
-
-// Background sync for offline actions (optional enhancement)
-self.addEventListener('sync', event => {
-  if (event.tag === 'sync-attendance') {
-    event.waitUntil(syncAttendance());
-  }
-});
-
-async function syncAttendance() {
-  // This would sync offline attendance records when connection is restored
-  // Implementation depends on your backend API
-  console.log('Syncing attendance data...');
-}

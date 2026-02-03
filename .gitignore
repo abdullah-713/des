@@ -20,3 +20,6 @@ access_log
 /backups/
 *.bak
 *.sql
+*.zip
+*.html
+*.rar

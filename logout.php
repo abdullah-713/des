@@ -4,10 +4,12 @@ require_once 'config.php';
 // التحقق من إعداد السماح بالخروج
 $allowLogout = SystemSettings::get('allow_employee_logout', '0');
 
-// إذا كان المستخدم موظف وليس أدمن، فحص الإعداد
-if (!isset($_SESSION['admin_logged_in']) && $allowLogout === '0') {
+$userRole = $_SESSION['role'] ?? 'employee';
+
+// إذا كان المستخدم موظف وليس أدمن/مدير، فحص الإعداد
+if ($userRole === 'employee' && $allowLogout === '0') {
     // منع الخروج للموظفين
-    header('Location: employee.php');
+    header('Location: profile.php'); // Changed to profile.php
     exit;
 }
 

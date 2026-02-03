@@ -1,16 +1,48 @@
 {
   "name": "نظام الحضور الذكي - صرح انضباط",
   "short_name": "صرح انضباط",
-  "description": "نظام إدارة الحضور والانصراف للموظفين - تطبيق قابل للتثبيت",
+  "description": "نظام إدارة الحضور والانصراف للموظفين - تطبيق احترافي قابل للتثبيت",
   "start_url": "/index.php?source=pwa",
+  "id": "/",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
-  "background_color": "#fff8f1",
-  "theme_color": "#f97316",
-  "orientation": "portrait-primary",
+  "display_override": ["standalone", "minimal-ui", "window-controls-overlay"],
+  "background_color": "#f8fafc",
+  "theme_color": "#6366f1",
+  "orientation": "any",
   "prefer_related_applications": false,
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
   "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "logo.png",
       "sizes": "192x192",
@@ -19,9 +51,15 @@
     },
     {
       "src": "logo.png",
-      "sizes": "192x192",
+      "sizes": "256x256",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "logo.png",
@@ -41,18 +79,34 @@
       "src": "logo.png",
       "sizes": "540x720",
       "type": "image/png",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "واجهة الموظف"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "لوحة الإدارة"
     }
   ],
-  "categories": ["business", "productivity"],
+  "categories": ["business", "productivity", "utilities"],
   "lang": "ar",
   "dir": "rtl",
+  "iarc_rating_id": "",
   "shortcuts": [
     {
       "name": "تسجيل الحضور",
       "short_name": "حضور",
-      "description": "تسجيل الحضور بسرعة",
-      "url": "/employee.php",
+      "description": "تسجيل حضورك بسرعة",
+      "url": "/employee.php?action=checkin",
+      "icons": [{ "src": "logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "تسجيل الانصراف",
+      "short_name": "انصراف",
+      "description": "تسجيل انصرافك بسرعة",
+      "url": "/employee.php?action=checkout",
       "icons": [{ "src": "logo.png", "sizes": "192x192" }]
     },
     {
@@ -62,5 +116,22 @@
       "url": "/admin.php",
       "icons": [{ "src": "logo.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/employee.php",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+attendance",
+      "url": "/employee.php?code=%s"
+    }
+  ],
+  "related_applications": [],
+  "scope_extensions": []
 }

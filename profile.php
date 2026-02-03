@@ -2,13 +2,14 @@
 require_once 'config.php';
 
 // التحقق من تسجيل الدخول
-if (!isset($_SESSION['employee_code'])) {
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['employee_code'])) {
     header('Location: index.php');
     exit;
 }
 
-$employeeCode = $_SESSION['employee_code'];
-$employeeName = $_SESSION['employee_name'] ?? 'موظف';
+$employeeCode = $_SESSION['employee_code'] ?? $_SESSION['username'];
+$employeeName = $_SESSION['full_name'] ?? ($_SESSION['employee_name'] ?? 'مستخدم');
+$userRole = $_SESSION['role'] ?? 'employee';
 $companyName = SystemSettings::get('company_name', 'صرح انضباط');
 $allowLogout = SystemSettings::get('allow_employee_logout', '0'); // 0 = لا يسمح، 1 = يسمح
 $logoPath = SystemSettings::get('company_logo', '');

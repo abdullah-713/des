@@ -146,19 +146,34 @@ if (!isset($_SESSION['admin_logged_in'])) {
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>تسجيل الدخول - لوحة الإدارة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link href="assets/css/login.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="assets/css/login.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <script src="assets/js/pwa.js" defer></script>
 </head>
-<body lang="<?php echo $_SESSION['lang']; ?>" dir="<?php echo $_SESSION['lang'] === 'ar' ? 'rtl' : 'ltr'; ?>">
-    <div class="lang-switcher" style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
-        <a href="?lang=<?php echo $_SESSION['lang'] === 'ar' ? 'en' : 'ar'; ?>" class="btn btn-secondary" style="font-size: 12px; padding: 4px 10px;">
-            <?php echo $_SESSION['lang'] === 'ar' ? 'English' : 'العربية'; ?>
+<body lang="<?php echo $_SESSION['lang'] ?? 'ar'; ?>" dir="<?php echo ($_SESSION['lang'] ?? 'ar') === 'ar' ? 'rtl' : 'ltr'; ?>">
+    <!-- Floating Particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <div class="lang-switcher">
+        <a href="?lang=<?php echo ($_SESSION['lang'] ?? 'ar') === 'ar' ? 'en' : 'ar'; ?>" class="lang-btn">
+            🌐 <?php echo ($_SESSION['lang'] ?? 'ar') === 'ar' ? 'English' : 'العربية'; ?>
         </a>
     </div>
     <div class="login-container">
-        <h1>🔐 لوحة الإدارة</h1>
+        <h1 class="app-title">🔐 لوحة الإدارة</h1>
         
         <div class="demo-info">
             <strong>بيانات الدخول الافتراضية:</strong><br>
@@ -167,33 +182,40 @@ if (!isset($_SESSION['admin_logged_in'])) {
         </div>
         
         <?php if (!empty($loginError)): ?>
-            <div class="error"><?php echo htmlspecialchars($loginError); ?></div>
+            <div class="error-message">⚠️ <?php echo htmlspecialchars($loginError); ?></div>
         <?php endif; ?>
         
         <form method="POST" autocomplete="off">
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
             
             <div class="form-group">
-                <label>اسم المستخدم</label>
+                <label>👤 اسم المستخدم</label>
                 <input type="text" name="username" required autocomplete="username" <?php echo $loginLocked ? 'disabled' : ''; ?>>
             </div>
             <div class="form-group">
-                <label>كلمة المرور</label>
+                <label>🔑 كلمة المرور</label>
                 <input type="password" name="password" required autocomplete="current-password" <?php echo $loginLocked ? 'disabled' : ''; ?>>
             </div>
-            <button type="submit" class="btn-login" <?php echo $loginLocked ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''; ?>>
-                <?php echo $loginLocked ? '⏳ يرجى الانتظار...' : 'دخول'; ?>
+            <button type="submit" class="btn-login" <?php echo $loginLocked ? 'disabled' : ''; ?>>
+                <?php echo $loginLocked ? '⏳ يرجى الانتظار...' : '🚀 دخول'; ?>
             </button>
         </form>
         
-        <div style="text-align: center; margin-top: 15px; font-size: 12px; color: #64748b;">
+        <p class="footer-note">
             🔒 الجلسة محمية بتشفير آمن
-        </div>
+        </p>
         
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="employee.php" style="color: #64748b; text-decoration: none;">← العودة لواجهة الموظف</a>
+        <div class="admin-link">
+            <a href="index.php">← العودة لواجهة الموظف</a>
         </div>
     </div>
+    
+    <script>
+        // Dark theme detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.dataset.theme = 'dark';
+        }
+    </script>
 </body>
 </html>
 <?php
@@ -230,10 +252,11 @@ try {
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="robots" content="noindex, nofollow">
-    <meta name="theme-color" content="#f97316">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="color-scheme" content="light dark">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -241,9 +264,10 @@ try {
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="logo.png">
     <title>لوحة الإدارة - نظام الحضور</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="assets/css/admin.css" rel="stylesheet">
+    <link href="assets/css/admin.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <script src="assets/js/pwa.js" defer></script>
 </head>
 <body>
     <div class="app-shell">
@@ -327,6 +351,7 @@ try {
                 </button>
             </div>
         </aside>
+        <div class="sidebar-overlay" onclick="document.getElementById('sidebar').classList.remove('mobile-open')"></div>
         <div class="app-main">
             <div class="topbar">
                 <div class="title-block">

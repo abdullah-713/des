@@ -20,21 +20,25 @@ if (!$logoPath || !file_exists($logoPath)) {
 <html lang="<?php echo $_SESSION['lang']; ?>" dir="<?php echo $_SESSION['lang'] === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f97316">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="color-scheme" content="light dark">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="<?php echo htmlspecialchars($companyName); ?>">
+    <meta name="description" content="نظام الحضور الذكي - صرح انضباط">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="<?php echo htmlspecialchars($logoPath ?: 'logo.png'); ?>">
+    <link rel="icon" type="image/png" href="<?php echo htmlspecialchars($logoPath ?: 'logo.png'); ?>">
     <title><?php echo htmlspecialchars($companyName); ?> - <?php echo __('app_name'); ?></title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="assets/css/variables.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/variables.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <style>
+        /* Privacy Modal - Inline for critical loading */
         .privacy-modal {
             display: none; 
             position: fixed; 
@@ -124,6 +128,7 @@ if (!$logoPath || !file_exists($logoPath)) {
             color: #ef4444;
         }
     </style>
+    <script src="assets/js/pwa.js" defer></script>
 </head>
 <body>
     <!-- Privacy Policy Modal -->

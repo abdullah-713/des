@@ -11,6 +11,8 @@ if (-not (Test-Path "dist")) {
 $filesToCopy = @(
     "index.php",
     "employee.php",
+    "profile.php",
+    "upgrade_users.php",
     "admin.php",
     "database_production.sql",
     "admin_api.php",
